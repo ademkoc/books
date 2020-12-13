@@ -2,29 +2,45 @@ import './BookList.css'
 import React from 'react'
 import Book from './Book'
 import { BookContext } from '../contexts/BookContext'
+import { ThemeContext } from '../contexts/ThemeContext'
 
 class BookList extends React.Component {
   render() {
     return (
-      <BookContext.Consumer>
-        {(context) => (
-          <section className="page-section bg-light" id="portfolio">
-            <div className="container">
-              <div className="text-center">
-                <h2 className="section-heading text-uppercase">Portfolio</h2>
-                <h3 className="section-subheading text-muted">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h3>
-              </div>
-              <div className="row">
-                {context.books.map((book, i) => (
-                  <Book book={book} key={i} />
-                ))}
-              </div>
-            </div>
-          </section>
+      <ThemeContext.Consumer>
+        {(themeContext) => (
+          <BookContext.Consumer>
+            {(bookContext) => {
+              const { books } = bookContext
+              const { isDarkTheme, dark, light } = themeContext
+              const theme = isDarkTheme ? dark : light
+              return (
+                <section
+                  className="page-section"
+                  style={{ background: theme.bg, color: theme.txt }}
+                  id="portfolio"
+                >
+                  <div className="container">
+                    <div className="text-center">
+                      <h2 className="section-heading text-uppercase">
+                        Portfolio
+                      </h2>
+                      <h3 className="section-subheading text-muted">
+                        Lorem ipsum dolor sit amet consectetur.
+                      </h3>
+                    </div>
+                    <div className="row">
+                      {books.map((book, i) => (
+                        <Book book={book} key={i} />
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              )
+            }}
+          </BookContext.Consumer>
         )}
-      </BookContext.Consumer>
+      </ThemeContext.Consumer>
     )
   }
 }
